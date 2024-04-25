@@ -1,0 +1,19 @@
+python -m venv env
+#Linux:
+source env/bin/activate
+pip install -r requirements.txt
+#databases
+ mysql -u root -p 
+ CREATE USER 'user'@'localhost' IDENTIFIED BY 'root';
+ GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+ CREATE DATABASE userdb;
+ USE userdb
+ INSERT INTO myapp_user (user) VALUES ('John');
+ EXIT;
+
+
+#migration
+python manage.py makemigrations
+python manage.py migrate
+#run
+python manage.py runserver
