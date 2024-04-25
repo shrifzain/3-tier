@@ -1,7 +1,6 @@
-# 3-tier
 # Project Setup Guide
 
-This guide will help you set up the project environment and database.
+This guide will help you set up the project environment, including backend and frontend dependencies, as well as the database.
 
 ## Step 1: Environment Setup
 
@@ -16,7 +15,7 @@ This guide will help you set up the project environment and database.
     source env/bin/activate
     ```
 
-3. Install project dependencies:
+3. Install backend project dependencies:
     ```bash
     pip install -r requirements.txt
     ```
@@ -58,7 +57,7 @@ This guide will help you set up the project environment and database.
     EXIT;
     ```
 
-## Step 3: Migration
+## Step 3: Backend Migration
 
 1. Make migrations:
     ```bash
@@ -70,10 +69,24 @@ This guide will help you set up the project environment and database.
     python manage.py migrate
     ```
 
-## Step 4: Run the Server
+## Step 4: Frontend Setup
+
+1. Navigate to the frontend directory:
+    ```bash
+    cd frontend
+    ```
+
+2. Install frontend dependencies using npm:
+    ```bash
+    npm install
+    ```
+
+## Step 5: Run the Server
 
 Start the Django server:
 ```bash
 python manage.py runserver
-
+## Step 6: Run the frontend
+```bash
+npm start
 
