@@ -5,7 +5,7 @@ pipeline {
     environment {
         AWS_DEFAULT_REGION = 'us-east-1'
         ECR_REPO = '7673-9771-0460.dkr.ecr.us-east-1.amazonaws.com/nti_jenkins'
-        GITHUB_REPO_URL = 'https://github.com/shrifzain/3-tier/frontend'
+        GITHUB_REPO_URL = 'https://github.com/shrifzain/3-tier.git'
         DOCKER_IMAGE_TAG = 'latest'
     }
 
@@ -19,7 +19,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${ECR_REPO}:${DOCKER_IMAGE_TAG}", ".")
+                    docker.build("${ECR_REPO}:${DOCKER_IMAGE_TAG}", "frontend/.")
                 }
             }
         }
