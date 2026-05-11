@@ -61,7 +61,7 @@ This guide will help you set up the project environment, including backend and f
 
 1. Make migrations:
     ```bash
-    python manage.py makemigrations
+    python manage.py makemigrationsc
     ```
 
 2. Apply migrations:
