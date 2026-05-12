@@ -1,57 +1,62 @@
-name: Trigger GitLab Pipeline
+name: GitHub To GitLab Trigger
 
 on:
   push:
     branches:
-      - master
       - dev
-      - 'feature/**'
-      - 'hotfix/**'
+      - 'feature/*'
     tags:
       - 'v*'
 
   pull_request:
-    types: [opened, synchronize, reopened, closed]
-
-  release:
-    types: [published]
-
-concurrency:
-  group: trigger-${{ github.ref }}
-  cancel-in-progress: true
+    branches:
+      - dev
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
 
 jobs:
-  trigger:
+
+  trigger-gitlab:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
-   
+
     steps:
-      - name: Debug URL
-       run: |
-              echo "URL=${{ secrets.GITLAB_URL }}"
-              echo "PROJECT=${{ secrets.GITLAB_PROJECT_ID }}"
-      - name: Determine event metadata
-        shell: bash
+
+      - name: Prepare Variables
         run: |
-          {
-            echo "GH_EVENT=${{ github.event_name }}"
-            echo "GH_REF=${{ github.ref }}"
-            echo "GH_REF_NAME=${{ github.ref_name }}"
-            echo "GH_SHA=${{ github.sha }}"
-            echo "GH_ACTOR=${{ github.actor }}"
-          } >> "$GITHUB_ENV"
+          echo "GH_EVENT=${{ github.event_name }}" >> $GITHUB_ENV
+          echo "GH_REF=${{ github.ref }}" >> $GITHUB_ENV
+          echo "GH_REF_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          echo "GH_SHA=${{ github.sha }}" >> $GITHUB_ENV
+          echo "GH_ACTOR=${{ github.actor }}" >> $GITHUB_ENV
 
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            {
-              echo "PR_NUMBER=${{ github.event.pull_request.number }}"
-              echo "PR_MERGED=${{ github.event.pull_request.merged }}"
-              echo "PR_BASE=${{ github.event.pull_request.base.ref }}"
-              echo "PR_HEAD=${{ github.event.pull_request.head.ref }}"
-            } >> "$GITHUB_ENV"
-          fi
+          echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          echo "PR_MERGED=${{ github.event.pull_request.merged }}" >> $GITHUB_ENV
+          echo "PR_BASE=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
+          echo "PR_HEAD=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
 
-      - name: Trigger GitLab
-        shell: bash
+      - name: Debug Variables
+        run: |
+          echo "========== GitHub Variables =========="
+          echo "GH_EVENT=$GH_EVENT"
+          echo "GH_REF=$GH_REF"
+          echo "GH_REF_NAME=$GH_REF_NAME"
+          echo "GH_SHA=$GH_SHA"
+          echo "GH_ACTOR=$GH_ACTOR"
+          echo "PR_NUMBER=$PR_NUMBER"
+          echo "PR_MERGED=$PR_MERGED"
+          echo "PR_BASE=$PR_BASE"
+          echo "PR_HEAD=$PR_HEAD"
+          echo "======================================"
+
+      - name: Debug GitLab Config
+        run: |
+          echo "GITLAB_URL=${{ secrets.GITLAB_URL }}"
+          echo "GITLAB_PROJECT_ID=${{ secrets.GITLAB_PROJECT_ID }}"
+
+      - name: Trigger GitLab Pipeline
         run: |
           curl --fail --retry 3 --retry-delay 2 -X POST \
             -F token=${{ secrets.GITLAB_TRIGGER_TOKEN }} \
