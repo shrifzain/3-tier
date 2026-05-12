@@ -45,7 +45,10 @@ jobs:
               echo "PR_HEAD=${{ github.event.pull_request.head.ref }}"
             } >> "$GITHUB_ENV"
           fi
-
+      - name: Debug GitLab Config
+        run: |
+          echo "GITLAB_URL=${{ secrets.GITLAB_URL }}"
+          echo "GITLAB_PROJECT_ID=${{ secrets.GITLAB_PROJECT_ID }}"
       - name: Trigger GitLab
         shell: bash
         run: |
