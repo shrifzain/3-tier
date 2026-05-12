@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        AWS_DEFAULT_REGION = 'us-east-1'
+        AWS_DEFAULT_REGION = 'us-eaddddst-1'
         ECR_REPO = '7673-9771-0460.dkr.ecr.us-east-1.amazonaws.com/nti_jenkins'
         GITHUB_REPO_URL = 'https://github.com/shrifzain/3-tier.git'
         DOCKER_IMAGE_TAG = 'latest'
