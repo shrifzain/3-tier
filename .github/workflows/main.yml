@@ -46,19 +46,19 @@ jobs:
             } >> "$GITHUB_ENV"
           fi
 
-      - name: Trigger GitLab
-        shell: bash
-        run: |
-          curl --fail --retry 3 --retry-delay 2 -X POST \
-            -F token=${{ secrets.GITLAB_TRIGGER_TOKEN }} \
-            -F ref=main \
-            -F "variables[GH_EVENT]=$GH_EVENT" \
-            -F "variables[GH_REF]=$GH_REF" \
-            -F "variables[GH_REF_NAME]=$GH_REF_NAME" \
-            -F "variables[GH_SHA]=$GH_SHA" \
-            -F "variables[GH_ACTOR]=$GH_ACTOR" \
-            -F "variables[PR_NUMBER]=$PR_NUMBER" \
-            -F "variables[PR_MERGED]=$PR_MERGED" \
-            -F "variables[PR_BASE]=$PR_BASE" \
-            -F "variables[PR_HEAD]=$PR_HEAD" \
-            "${{ secrets.GITLAB_URL }}/api/v4/projects/${{ secrets.GITLAB_PROJECT_ID }}/trigger/pipeline"
+      # - name: Trigger GitLab
+      #   shell: bash
+      #   run: |
+      #     curl --fail --retry 3 --retry-delay 2 -X POST \
+      #       -F token=${{ secrets.GITLAB_TRIGGER_TOKEN }} \
+      #       -F ref=main \
+      #       -F "variables[GH_EVENT]=$GH_EVENT" \
+      #       -F "variables[GH_REF]=$GH_REF" \
+      #       -F "variables[GH_REF_NAME]=$GH_REF_NAME" \
+      #       -F "variables[GH_SHA]=$GH_SHA" \
+      #       -F "variables[GH_ACTOR]=$GH_ACTOR" \
+      #       -F "variables[PR_NUMBER]=$PR_NUMBER" \
+      #       -F "variables[PR_MERGED]=$PR_MERGED" \
+      #       -F "variables[PR_BASE]=$PR_BASE" \
+      #       -F "variables[PR_HEAD]=$PR_HEAD" \
+      #       "${{ secrets.GITLAB_URL }}/api/v4/projects/${{ secrets.GITLAB_PROJECT_ID }}/trigger/pipeline"
