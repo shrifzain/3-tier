@@ -24,8 +24,12 @@ jobs:
   trigger:
     runs-on: ubuntu-latest
     timeout-minutes: 2
-
+   
     steps:
+      - name: Debug URL
+       run: |
+              echo "URL=${{ secrets.GITLAB_URL }}"
+              echo "PROJECT=${{ secrets.GITLAB_PROJECT_ID }}"
       - name: Determine event metadata
         shell: bash
         run: |
