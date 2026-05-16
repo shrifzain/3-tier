@@ -1,5 +1,14 @@
 name: Trigger GitLab Pipeline
 
+# This file is a template. Commit it into the GitHub repository that owns
+# the source code (WideBot/WideRAG). GitHub Actions only fire from workflows
+# present in the same repo where the push happens.
+#
+# Required GitHub secrets:
+#   GITLAB_URL            e.g. https://gitlab.example.com (no trailing slash)
+#   GITLAB_PROJECT_ID     numeric project ID shown under the GitLab project title
+#   GITLAB_TRIGGER_TOKEN  GitLab → Settings → CI/CD → Pipeline triggers → token
+
 on:
   push:
     branches:
