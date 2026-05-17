@@ -1,4 +1,3 @@
-xxxxxldddfggnhghhh tgtgrgtgt gffgtt5 gggttt
 pipeline {
     agent any
 
