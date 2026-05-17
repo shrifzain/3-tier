@@ -13,17 +13,16 @@ on:
   push:
     branches:
       - master
+      - main
       - dev
-      - 'feature/**'
-      - 'hotfix/**'
+      - develop
     tags:
       - 'v*'
 
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-
-  release:
-    types: [published]
+  # NOTE: pull_request, release, and feature/hotfix push events are
+  # intentionally NOT triggered. There is no test or PR-validation logic
+  # in the GitLab pipeline yet, so running build+test on those would
+  # consume CI minutes for no gain. Re-add them once tests exist.
 
 concurrency:
   group: trigger-${{ github.ref }}
@@ -58,6 +57,8 @@ jobs:
       - name: Trigger GitLab
         shell: bash
         run: |
+          # Capture HTTP code AND response body so 4xx errors from GitLab
+          # are visible in the log (the previous --fail dropped the body).
           set +e
           HTTP_CODE=$(curl --silent --retry 3 --retry-delay 2 \
             --output /tmp/gitlab-response.json \
