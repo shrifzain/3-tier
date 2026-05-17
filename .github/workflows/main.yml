@@ -58,7 +58,11 @@ jobs:
       - name: Trigger GitLab
         shell: bash
         run: |
-          curl --fail --retry 3 --retry-delay 2 -X POST \
+          set +e
+          HTTP_CODE=$(curl --silent --retry 3 --retry-delay 2 \
+            --output /tmp/gitlab-response.json \
+            --write-out '%{http_code}' \
+            -X POST \
             -F token=${{ secrets.GITLAB_TRIGGER_TOKEN }} \
             -F ref=main \
             -F "variables[GH_EVENT]=$GH_EVENT" \
@@ -70,4 +74,11 @@ jobs:
             -F "variables[PR_MERGED]=$PR_MERGED" \
             -F "variables[PR_BASE]=$PR_BASE" \
             -F "variables[PR_HEAD]=$PR_HEAD" \
-            "${{ secrets.GITLAB_URL }}/api/v4/projects/${{ secrets.GITLAB_PROJECT_ID }}/trigger/pipeline"
+            "${{ secrets.GITLAB_URL }}/api/v4/projects/${{ secrets.GITLAB_PROJECT_ID }}/trigger/pipeline")
+          echo "HTTP $HTTP_CODE"
+          echo "Response body:"
+          cat /tmp/gitlab-response.json
+          echo
+          if [ "$HTTP_CODE" != "201" ]; then
+            exit 1
+          fi
