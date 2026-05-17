@@ -1,4 +1,4 @@
-# Project Setup Guidee
+# Project Setup Guide
 
 This guide will help you set up the project environment, including backend and frontend dependencies, as well as the database.
 
