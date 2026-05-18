@@ -37,12 +37,19 @@ jobs:
       - name: Determine event metadata
         shell: bash
         run: |
+          # Push-event commit author + message (first line only; multi-line
+          # subjects break Slack's JSON-on-one-line payload).
+          AUTHOR='${{ github.event.head_commit.author.name }}'
+          MSG=$(printf '%s' '${{ github.event.head_commit.message }}' | head -n1)
+
           {
             echo "GH_EVENT=${{ github.event_name }}"
             echo "GH_REF=${{ github.ref }}"
             echo "GH_REF_NAME=${{ github.ref_name }}"
             echo "GH_SHA=${{ github.sha }}"
             echo "GH_ACTOR=${{ github.actor }}"
+            echo "GH_AUTHOR=$AUTHOR"
+            echo "GH_COMMIT_MESSAGE=$MSG"
           } >> "$GITHUB_ENV"
 
           if [ "${{ github.event_name }}" = "pull_request" ]; then
@@ -71,6 +78,8 @@ jobs:
             -F "variables[GH_REF_NAME]=$GH_REF_NAME" \
             -F "variables[GH_SHA]=$GH_SHA" \
             -F "variables[GH_ACTOR]=$GH_ACTOR" \
+            -F "variables[GH_AUTHOR]=$GH_AUTHOR" \
+            -F "variables[GH_COMMIT_MESSAGE]=$GH_COMMIT_MESSAGE" \
             -F "variables[PR_NUMBER]=$PR_NUMBER" \
             -F "variables[PR_MERGED]=$PR_MERGED" \
             -F "variables[PR_BASE]=$PR_BASE" \
