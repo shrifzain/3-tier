@@ -4,7 +4,7 @@ WORKDIR /app
 COPY ./package.json .
 RUN npm install
 COPY . .
-EXPOSE 30000
+EXPOSE 3000
 RUN npm run build
 FROM nginx
 EXPOSE 3000
