@@ -1,63 +1,63 @@
-name: Trigger GitLab Pipeline
+# name: Trigger GitLab Pipeline
 
-# IMPORTANT: This file is a template. It must be committed into the
-# GitHub repository that owns the source code (WideBot/WideRAG),
-# NOT into this CI-config repository. GitHub Actions only fire from
-# workflows present in the same repo where the push happens.
+# # IMPORTANT: This file is a template. It must be committed into the
+# # GitHub repository that owns the source code (WideBot/WideRAG),
+# # NOT into this CI-config repository. GitHub Actions only fire from
+# # workflows present in the same repo where the push happens.
 
-on:
-  push:
-    branches:
-      - dev
-      - develop
-      - main
-      - master
-      - 'feature/**'
-  pull_request:
-    types: [opened, synchronize, closed]
-  release:
-    types: [published]
+# on:
+#   push:
+#     branches:
+#       - dev
+#       - develop
+#       - main
+#       - master
+#       - 'feature/**'
+#   pull_request:
+#     types: [opened, synchronize, closed]
+#   release:
+#     types: [published]
 
-jobs:
-  trigger-gitlab:
-    runs-on: ubuntu-latest
-    steps:
-      - name: POST to GitLab pipeline trigger API
-        env:
-          GITLAB_TRIGGER_TOKEN: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
-          GITLAB_PROJECT_ID:    ${{ secrets.GITLAB_PROJECT_ID }}
-        run: |
-          set -euo pipefail
-          REF_NAME="${GITHUB_REF_NAME}"
-          REF="${GITHUB_REF}"
-          SHA="${GITHUB_SHA}"
-          ACTOR="${GITHUB_ACTOR}"
-          EVENT="${GITHUB_EVENT_NAME}"
-          REPO="${GITHUB_REPOSITORY}"
+# jobs:
+#   trigger-gitlab:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: POST to GitLab pipeline trigger API
+#         env:
+#           GITLAB_TRIGGER_TOKEN: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
+#           GITLAB_PROJECT_ID:    ${{ secrets.GITLAB_PROJECT_ID }}
+#         run: |
+#           set -euo pipefail
+#           REF_NAME="${GITHUB_REF_NAME}"
+#           REF="${GITHUB_REF}"
+#           SHA="${GITHUB_SHA}"
+#           ACTOR="${GITHUB_ACTOR}"
+#           EVENT="${GITHUB_EVENT_NAME}"
+#           REPO="${GITHUB_REPOSITORY}"
 
-          PR_NUMBER=""; PR_MERGED=""; PR_BASE=""; PR_HEAD=""; PR_DRAFT=""
-          if [ "$EVENT" = "pull_request" ]; then
-            PR_NUMBER="${{ github.event.pull_request.number }}"
-            PR_MERGED="${{ github.event.pull_request.merged }}"
-            PR_BASE="${{ github.event.pull_request.base.ref }}"
-            PR_HEAD="${{ github.event.pull_request.head.ref }}"
-            PR_DRAFT="${{ github.event.pull_request.draft }}"
-          fi
+#           PR_NUMBER=""; PR_MERGED=""; PR_BASE=""; PR_HEAD=""; PR_DRAFT=""
+#           if [ "$EVENT" = "pull_request" ]; then
+#             PR_NUMBER="${{ github.event.pull_request.number }}"
+#             PR_MERGED="${{ github.event.pull_request.merged }}"
+#             PR_BASE="${{ github.event.pull_request.base.ref }}"
+#             PR_HEAD="${{ github.event.pull_request.head.ref }}"
+#             PR_DRAFT="${{ github.event.pull_request.draft }}"
+#           fi
 
-          echo "Triggering GitLab pipeline for $EVENT on $REF_NAME ($SHA)"
+#           echo "Triggering GitLab pipeline for $EVENT on $REF_NAME ($SHA)"
 
-          curl -fsS -X POST \
-            -F token="${GITLAB_TRIGGER_TOKEN}" \
-            -F ref=main \
-            -F "variables[GH_EVENT]=${EVENT}" \
-            -F "variables[GH_REF]=${REF}" \
-            -F "variables[GH_REF_NAME]=${REF_NAME}" \
-            -F "variables[GH_SHA]=${SHA}" \
-            -F "variables[GH_ACTOR]=${ACTOR}" \
-            -F "variables[GH_REPOSITORY]=${REPO}" \
-            -F "variables[PR_NUMBER]=${PR_NUMBER}" \
-            -F "variables[PR_MERGED]=${PR_MERGED}" \
-            -F "variables[PR_BASE]=${PR_BASE}" \
-            -F "variables[PR_HEAD]=${PR_HEAD}" \
-            -F "variables[PR_DRAFT]=${PR_DRAFT}" \
-            "https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/trigger/pipeline"
+#           curl -fsS -X POST \
+#             -F token="${GITLAB_TRIGGER_TOKEN}" \
+#             -F ref=main \
+#             -F "variables[GH_EVENT]=${EVENT}" \
+#             -F "variables[GH_REF]=${REF}" \
+#             -F "variables[GH_REF_NAME]=${REF_NAME}" \
+#             -F "variables[GH_SHA]=${SHA}" \
+#             -F "variables[GH_ACTOR]=${ACTOR}" \
+#             -F "variables[GH_REPOSITORY]=${REPO}" \
+#             -F "variables[PR_NUMBER]=${PR_NUMBER}" \
+#             -F "variables[PR_MERGED]=${PR_MERGED}" \
+#             -F "variables[PR_BASE]=${PR_BASE}" \
+#             -F "variables[PR_HEAD]=${PR_HEAD}" \
+#             -F "variables[PR_DRAFT]=${PR_DRAFT}" \
+#             "https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/trigger/pipeline"
