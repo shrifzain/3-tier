@@ -15,8 +15,7 @@ RUN apt-get install -y \
 WORKDIR /app
 
 # Copy the requirements file into the container
-COPY requirements.txt .
-
+COPY requirements.txt ./
 # Install Python package dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
